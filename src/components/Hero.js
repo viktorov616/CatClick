@@ -4,10 +4,13 @@ import HeroImage from '../img/naruto.png'
 
 const StyledHero = styled.img`
   background-image: url(${HeroImage});
-  background-size: 100%;
+  background-size: contain;
   background-repeat: no-repeat;
   width: 200px;
   height: 400px;
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
 `
 
 export default function Hero() {
