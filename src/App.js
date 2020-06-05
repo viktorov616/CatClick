@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import './App.css';
-import leaf from './img/leaf.png';
+import leaf from './img/bg1.jpg';
 import StyledGlobal from './styles/globalStyles';
 import Hero from './components/Hero';
 import Foe from './components/Foe';

@@ -6,10 +6,10 @@ const StyledFoe = styled.div`
   background-image: url(${FoeImage});
   background-size: contain;
   background-repeat: no-repeat;
-  width: 450px;
-  height: 700px;
+  width: 300px;
+  height: 475px;
   position: absolute;
-  right: 20px;
+  right: 175px;
   bottom: 20px;
 `
 

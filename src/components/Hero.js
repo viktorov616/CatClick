@@ -6,10 +6,10 @@ const StyledHero = styled.div`
   background-image: url(${HeroImage});
   background-size: contain;
   background-repeat: no-repeat;
-  width: 200px;
-  height: 400px;
+  width: 310px;
+  height: 450px;
   position: absolute;
-  left: 20px;
+  left: 500px;
   bottom: 20px;
 `
 
