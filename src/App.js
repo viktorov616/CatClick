@@ -1,25 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
+import styled from 'styled-components'
 import './App.css';
+import leaf from './img/leaf.png';
+import StyledGlobal from './styles/globalStyles';
+import Hero from './components/Hero';
+
+const StyledApp = styled.div`
+  background-image: url(${leaf});
+  height: 100%;
+  background-size: 100%;
+`
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <StyledGlobal />
+      <StyledApp className="App">
+        <Hero />
+      </StyledApp>
+    </>
   );
 }
 
