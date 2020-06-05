@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components';
 import HeroImage from '../img/naruto.png'
 
-const StyledHero = styled.img`
+const StyledHero = styled.div`
   background-image: url(${HeroImage});
   background-size: contain;
   background-repeat: no-repeat;
