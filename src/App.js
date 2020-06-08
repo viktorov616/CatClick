@@ -4,7 +4,7 @@ import './App.css';
 import leaf from './img/bg1.jpg';
 import StyledGlobal from './styles/globalStyles';
 import Hero from './components/Hero';
-import Foe from './components/Foe';
+import Foes from './components/Foes';
 
 const StyledApp = styled.div`
   position: relative;
@@ -20,7 +20,7 @@ function App() {
       <StyledGlobal />
       <StyledApp className="App">
         <Hero />
-        <Foe />
+        <Foes />
       </StyledApp>
     </>
   );

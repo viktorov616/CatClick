@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useCallback} from 'react'
 import styled from 'styled-components'
-import FoeImage from '../img/foe.png'
 
 const StyledFoe = styled.div`
-  background-image: url(${FoeImage});
+  cursor: pointer;
+  background-image: url(${props => props.foeImage});
   background-size: contain;
   background-repeat: no-repeat;
   width: 300px;
@@ -24,18 +24,19 @@ const StyledFoe = styled.div`
       position: absolute;
       display: block;
       background: #fff;
-<<<<<<< HEAD
       width: ${(props) => 100 - (100 / props.maxHp * props.hp)}%;
-=======
-      width: calc(100% - ${(props) => (100 / props.maxHp * props.hp)}%);
->>>>>>> a5545f8c896a48b6ac6ea507daacac26eeb93b9b
       height: 100%;
       right: 0;
     }
   }
 `
 
-export default function Foe() {
+export default function Foe({
+  hp: maxHp,
+  picture,
+  triggerNextFoe,
+  code
+}) {
   const passiveMoney = useCallback(() => {
     setMoney((newMoney) => (newMoney+1))
   }, []);
@@ -43,32 +44,31 @@ export default function Foe() {
   useEffect(() => {
     setInterval(passiveMoney, 1000)
   }, [passiveMoney]);
+
+  useEffect(() => {
+    setHp(maxHp)
+  }, [maxHp, code]);
   
-  const maxHp = 1000;
   const [money, setMoney] = useState(0);
   const [hp, setHp] = useState(maxHp);
+  const foeImage = require(`../img/${picture}`)
 
-<<<<<<< HEAD
   function handleSetHp() {
-    setHp(hp <= 0  ? maxHp : hp - 250);
+    if (hp <= 0 ) {
+      triggerNextFoe()
+    } else {
+      setHp(hp - 250);
+    }
   }
 
   return (
     <>
     <div style={{'color': 'white', 'user-select': 'none'}}>{money}</div>
-    <StyledFoe 
+    <StyledFoe
+      foeImage={foeImage}
       onClick={() => {
         setMoney((newMoney) => (newMoney+10));
         handleSetHp();
-=======
-  return (
-    <>
-    <div style={{'color': 'white'}}>{money}</div>
-    <StyledFoe 
-      onClick={() => {
-        setMoney((newMoney) => (newMoney+10));
-        setHp(hp - (maxHp - 250));
->>>>>>> a5545f8c896a48b6ac6ea507daacac26eeb93b9b
       }}
       maxHp={maxHp}
       hp={hp}
