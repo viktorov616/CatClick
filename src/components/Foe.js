@@ -24,7 +24,11 @@ const StyledFoe = styled.div`
       position: absolute;
       display: block;
       background: #fff;
+<<<<<<< HEAD
       width: ${(props) => 100 - (100 / props.maxHp * props.hp)}%;
+=======
+      width: calc(100% - ${(props) => (100 / props.maxHp * props.hp)}%);
+>>>>>>> a5545f8c896a48b6ac6ea507daacac26eeb93b9b
       height: 100%;
       right: 0;
     }
@@ -44,6 +48,7 @@ export default function Foe() {
   const [money, setMoney] = useState(0);
   const [hp, setHp] = useState(maxHp);
 
+<<<<<<< HEAD
   function handleSetHp() {
     setHp(hp <= 0  ? maxHp : hp - 250);
   }
@@ -55,6 +60,15 @@ export default function Foe() {
       onClick={() => {
         setMoney((newMoney) => (newMoney+10));
         handleSetHp();
+=======
+  return (
+    <>
+    <div style={{'color': 'white'}}>{money}</div>
+    <StyledFoe 
+      onClick={() => {
+        setMoney((newMoney) => (newMoney+10));
+        setHp(hp - (maxHp - 250));
+>>>>>>> a5545f8c896a48b6ac6ea507daacac26eeb93b9b
       }}
       maxHp={maxHp}
       hp={hp}
