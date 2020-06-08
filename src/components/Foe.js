@@ -1,11 +1,12 @@
 import React, {useState, useEffect, useCallback} from 'react'
 import styled from 'styled-components'
+import MoneyBg from '../img/money_bg.png';
 
 const StyledFoe = styled.div`
-  cursor: pointer;
   background-image: url(${props => props.foeImage});
   background-size: contain;
   background-repeat: no-repeat;
+  background-position: center;
   width: 300px;
   height: 475px;
   position: absolute;
@@ -30,6 +31,22 @@ const StyledFoe = styled.div`
     }
   }
 `
+const StyledMoney = styled.div`
+  color: #d87f0e;
+  user-select: none;
+  background: url(${MoneyBg}) no-repeat;
+  font-family: 'Manga';
+  font-weight: 700;
+  left: calc(50% - 150px);
+  width: 300px;
+  height: 73px;
+  position: absolute;
+  font-size: 30px;
+  top: 10px;
+  line-height: 82px;
+  padding-left: 50px;
+  text-shadow: 0 0 3px rgba(88, 51, 4, 0.5);
+`;
 
 export default function Foe({
   hp: maxHp,
@@ -63,18 +80,18 @@ export default function Foe({
 
   return (
     <>
-    <div style={{'color': 'white', 'user-select': 'none'}}>{money}</div>
-    <StyledFoe
-      foeImage={foeImage}
-      onClick={() => {
-        setMoney((newMoney) => (newMoney+10));
-        handleSetHp();
-      }}
-      maxHp={maxHp}
-      hp={hp}
-    >
-      <div className='hp-bar'></div>
-    </StyledFoe>
+      <StyledMoney>{money}</StyledMoney>
+      <StyledFoe 
+        foeImage={foeImage}
+        onClick={() => {
+          setMoney((newMoney) => (newMoney+10));
+          handleSetHp();
+        }}
+        maxHp={maxHp}
+        hp={hp}
+      >
+        <div className='hp-bar'></div>
+      </StyledFoe>
     </>
   )
 }
