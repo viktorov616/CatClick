@@ -3,11 +3,10 @@ import orderConfig from '../configs/order'
 import foesConfig from '../configs/foes'
 import Foe from './Foe';
 
-export default function Foes() {
+export default function Foes({handleFoeHit}) {
   const [foeIndex, setFoeIndex] = useState(0);
-  console.log({foeIndex})
+
   const handleTriggerNextFoe = () => {
-    console.log(orderConfig.length)
     setFoeIndex((index) => (index >= orderConfig.length - 1) ? 0 : index + 1)
   }
 
@@ -16,6 +15,7 @@ export default function Foes() {
       {...foesConfig[orderConfig[foeIndex]]}
       code={orderConfig[foeIndex]}
       triggerNextFoe={handleTriggerNextFoe}
+      handleHitFoe={handleFoeHit}
     />
   )
 }

@@ -20,6 +20,7 @@ const StylesGeneral = createGlobalStyle`
   body, #root {
     height: 100%;
     min-height: 100%;
+    font-family: 'Manga';
   }
 
   @font-face {

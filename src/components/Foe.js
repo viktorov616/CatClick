@@ -1,6 +1,5 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
-import MoneyBg from '../img/money_bg.png';
 
 const StyledFoe = styled.div`
   background-image: url(${props => props.foeImage});
@@ -31,42 +30,18 @@ const StyledFoe = styled.div`
     }
   }
 `
-const StyledMoney = styled.div`
-  color: #d87f0e;
-  user-select: none;
-  background: url(${MoneyBg}) no-repeat;
-  font-family: 'Manga';
-  font-weight: 700;
-  left: calc(50% - 150px);
-  width: 300px;
-  height: 73px;
-  position: absolute;
-  font-size: 30px;
-  top: 10px;
-  line-height: 82px;
-  padding-left: 50px;
-  text-shadow: 0 0 3px rgba(88, 51, 4, 0.5);
-`;
 
 export default function Foe({
   hp: maxHp,
   picture,
   triggerNextFoe,
-  code
+  code,
+  handleHitFoe,
 }) {
-  const passiveMoney = useCallback(() => {
-    setMoney((newMoney) => (newMoney+1))
-  }, []);
-
-  useEffect(() => {
-    setInterval(passiveMoney, 1000)
-  }, [passiveMoney]);
-
   useEffect(() => {
     setHp(maxHp)
   }, [maxHp, code]);
-  
-  const [money, setMoney] = useState(0);
+
   const [hp, setHp] = useState(maxHp);
   const foeImage = require(`../img/${picture}`)
 
@@ -80,11 +55,10 @@ export default function Foe({
 
   return (
     <>
-      <StyledMoney>{money}</StyledMoney>
-      <StyledFoe 
+      <StyledFoe
         foeImage={foeImage}
         onClick={() => {
-          setMoney((newMoney) => (newMoney+10));
+          handleHitFoe();
           handleSetHp();
         }}
         maxHp={maxHp}
