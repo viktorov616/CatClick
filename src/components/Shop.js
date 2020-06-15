@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import ShopOpened from '../img/scroll_opened.png';
 import ShopClosed from '../img/scroll_closed.png';
 import MoneyBuff from '../img/upgrade_moneybag.png';
+import CostCoins from '../img/cost_money.png';
+import shopConfig, {shopOrder} from '../configs/shop';
 
 const StyledShop = styled.div`
 	width: 209px;
@@ -25,37 +27,50 @@ const StyledShopItem = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
+	flex-wrap: wrap;
 `
 
 const StyledShopItemImage = styled.div`
 	width: 60px;
 	height: 60px;
 	background-image: url(${MoneyBuff});
-	background-size: cover;
+	background-size: contain;
 	margin-right: 10px;
 `
 
 const StyledShopMultiplier = styled.div`
 	font-size: 14px;
 	color: #11110f;
+`
+const StyledMultiplierNumber = styled.div`
 	span:first-child {
-		font-size: 10px;
+		font-size: 15px;
 	}
 	span:last-child {
-		font-size: 26px;
+		font-size: 30px;
 	}
 `
-
 const StyledShopToggler = styled.div`
 	height: 64px;
 	width: 100%;
+`
+
+const StyledItemCost = styled.div`
+	background-image: url(${CostCoins});
+	background-size: 30%;
+	background-repeat: no-repeat;
+	background-position: 0% 50%;
+	font-size: 25px;
+	padding-left: 30px;
+	color: #d87f0e;
+	margin-top: 5px;
 `
 
 export default function Shop({
 	moneyMult,
 	dispatch,
 }) {
-	const [shopStatus, setShopStatus] = useState(false);
+	const [shopStatus, setShopStatus] = useState(false); 
 
   return (
     <StyledShop
@@ -69,11 +84,22 @@ export default function Shop({
 					field: 'moneyMult',
 					value: moneyMult + 1,
 					})}>
-					<StyledShopItemImage />
-					<StyledShopMultiplier>
-						<span>x</span>
-						<span>{moneyMult}</span>
-					</StyledShopMultiplier>
+					{shopOrder.map((item) => {
+						return (
+							<>
+								<StyledShopItemImage />
+								<StyledShopMultiplier>
+									<StyledMultiplierNumber>
+										<span>x</span>
+										<span>{moneyMult}</span>
+									</StyledMultiplierNumber>
+								</StyledShopMultiplier>
+								<StyledItemCost>
+									{shopConfig[item].initialCost}
+								</StyledItemCost>
+							</>
+						);
+					})}
 				</StyledShopItem>
 			) }
 		</StyledShop>
