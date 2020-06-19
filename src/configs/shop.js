@@ -1,11 +1,9 @@
 const shop = {
-    "moneyMulti": {
-      "initialCost": "300",
-    },
-  }
-  
+  moneyMulti: {
+    initialCost: 300,
+  },
+};
+
 export default shop;
 
-export const shopOrder = [
-  "moneyMulti",
-];
+export const shopOrder = ["moneyMulti"];

@@ -98,11 +98,18 @@ export default function Shop({
       <StyledShopToggler onClick={() => setShopStatus(!shopStatus)} />
       {shopStatus &&
         shopOrder.map((item) => {
+          const initCost = shopConfig[item].initialCost;
+          const cost = moneyMult === 1
+          ? initCost
+          : new Array(moneyMult - 1).fill('').reduce((result, a, index) => (
+            result + (initCost * 0.1 * (index + 1))
+          ), initCost);
+
           return (
             <StyledShopItem
               key={item}
-              onClick={() => itemClickHandler(shopConfig[item].initialCost)}
-              disabled={allMoney < shopConfig[item].initialCost}
+              onClick={() => itemClickHandler(cost)}
+              disabled={allMoney < cost}
             >
               <StyledShopItemImage />
               <StyledShopMultiplier>
@@ -111,7 +118,7 @@ export default function Shop({
                   <span>{moneyMult}</span>
                 </StyledMultiplierNumber>
               </StyledShopMultiplier>
-              <StyledItemCost>{shopConfig[item].initialCost}</StyledItemCost>
+              <StyledItemCost>{cost}</StyledItemCost>
             </StyledShopItem>
           );
         })}
