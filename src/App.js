@@ -34,6 +34,8 @@ function App() {
     setMoney((money) => (money - itemCost));
   }
 
+  const handleFoeHit = useCallback(() => setMoney((newMoney) => newMoney + 10), [])
+
   return (
     <>
       <StyledGlobal />
@@ -41,7 +43,7 @@ function App() {
         <Money money={money} />
         <Shop dispatch={dispatch} moneyMult={moneyMult} purchaseHandler={purchaseHandler} allMoney={money} />
         <Hero />
-        <Foes handleFoeHit={() => setMoney((newMoney) => newMoney + 10)} />
+        <Foes handleFoeHit={handleFoeHit} />
       </StyledApp>
     </>
   );

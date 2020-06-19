@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import produce from 'immer';
 
 export const basicFormReducer = (state, action) => produce(state, (draftState) => {
@@ -14,3 +15,13 @@ export const basicFormReducer = (state, action) => produce(state, (draftState) =
       return state;
   }
 });
+
+export function usePrevious(value) {
+  const ref = useRef(value);
+
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+
+  return ref.current;
+}
