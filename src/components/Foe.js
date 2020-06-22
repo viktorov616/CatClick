@@ -73,10 +73,25 @@ const Foe = React.memo(
       };
 
       animate();
-    }, [foeIndex, animationControls]);
+    }, [foeIndex, animationControls, animationHpControls]);
 
     const [hp, setHp] = useState(maxHp);
     const foeImage = require(`../img/${picture}`);
+
+    useEffect(() => {
+      const animate = async () => {
+        await animationControls.start({
+          filter: 'contrast(50%)',
+          transition: { duration: 0.1 },
+        });
+        animationControls.start({
+          filter: 'contrast(100%)',
+          transition: { duration: 0.2 },
+        });
+      };
+
+      if (hp !== maxHp && previousCode === code) animate();
+    }, [animationControls, code, hp, maxHp, previousCode]);
 
     function handleSetHp() {
       if (hp <= 0) {

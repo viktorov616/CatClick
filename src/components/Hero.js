@@ -1,20 +1,39 @@
-import React from 'react'
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import HeroImage from '../img/naruto.png'
+import HeroImage from '../img/naruto.png';
+import { motion, useAnimation } from 'framer-motion';
 
-const StyledHero = styled.div`
+const StyledHero = styled(motion.div)`
   background-image: url(${HeroImage});
-  background-size: contain;
   background-repeat: no-repeat;
-  width: 310px;
+  background-size: contain;
+  bottom: 20px;
+  left: 500px;
   height: 450px;
   position: absolute;
-  left: 500px;
-  bottom: 20px;
-`
+  width: 310px;
+`;
 
-export default function Hero() {
-  return (
-    <StyledHero />
-  )
-}
+const Hero = React.memo(({ animateHero, setAnimateHero }) => {
+  const animationControls = useAnimation();
+  console.log({ animateHero });
+  useEffect(() => {
+    const animate = async () => {
+      await animationControls.start({
+        left: Math.random() > 0.8 ? '550px' : '520px',
+        transition: { duration: 0.1 },
+      });
+      animationControls.start({
+        left: '500px',
+        transition: { duration: 0.2 },
+      });
+      setAnimateHero(false);
+    };
+
+    if (animateHero) animate();
+  }, [animateHero, animationControls, setAnimateHero]);
+
+  return <StyledHero animate={animationControls} />;
+});
+
+export default Hero
