@@ -1,33 +1,33 @@
-import React, { useState, useReducer } from "react";
-import styled from "styled-components";
-import ShopOpened from "../img/scroll_opened.png";
-import ShopClosed from "../img/scroll_closed.png";
-import MoneyBuff from "../img/upgrade_moneybag.png";
-import CostCoins from "../img/cost_money.png";
-import shopConfig, { shopOrder } from "../configs/shop";
+import React, { useState, useReducer } from 'react';
+import styled from 'styled-components';
+import ShopOpened from '../img/scroll_opened.png';
+import ShopClosed from '../img/scroll_closed.png';
+import MoneyBuff from '../img/upgrade_moneybag.png';
+import CostCoins from '../img/cost_money.png';
+import shopConfig, { shopOrder } from '../configs/shop';
 
 const StyledShop = styled.div`
   width: 209px;
   height: ${(props) => (props.status ? 780 : 61)}px;
-  display: block;
+  display: flex;
   left: 20px;
   top: 20px;
   position: absolute;
   background: url(${(props) => props.img});
+  justify-content: center;
+  align-content: flex-start;
+  flex-wrap: wrap;
 `;
 
 const StyledShopItem = styled.div`
   width: calc(100% - 90px);
-  height: 60px;
-  top: 75px;
-  left: 50px;
-  position: absolute;
+  height: 90px;
   margin-right: 10px;
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
+  padding-left: 15px;
   cursor: pointer;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 
   ${(props) =>
     props.disabled &&
@@ -51,6 +51,7 @@ const StyledShopMultiplier = styled.div`
   color: #11110f;
 `;
 const StyledMultiplierNumber = styled.div`
+  margin-top: 15px;
   span:first-child {
     font-size: 15px;
   }
@@ -82,12 +83,12 @@ export default function Shop({
 }) {
   const [shopStatus, setShopStatus] = useState(false);
 
-  function itemClickHandler(cost) {
+  function itemClickHandler({ cost, field }) {
     if (allMoney >= cost) {
       purchaseHandler(cost);
       dispatch({
-        type: "changeField",
-        field: "moneyMult",
+        type: 'changeField',
+        field: field,
         value: moneyMult + 1,
       });
     }
@@ -99,16 +100,20 @@ export default function Shop({
       {shopStatus &&
         shopOrder.map((item) => {
           const initCost = shopConfig[item].initialCost;
-          const cost = moneyMult === 1
-          ? initCost
-          : new Array(moneyMult - 1).fill('').reduce((result, a, index) => (
-            result + (initCost * 0.1 * (index + 1))
-          ), initCost);
+          const cost =
+            moneyMult === 1
+              ? initCost
+              : new Array(moneyMult - 1)
+                  .fill('')
+                  .reduce(
+                    (result, a, index) => result + initCost * 0.1 * (index + 1),
+                    initCost
+                  );
 
           return (
             <StyledShopItem
               key={item}
-              onClick={() => itemClickHandler(cost)}
+              onClick={() => itemClickHandler({ cost, field: item })}
               disabled={allMoney < cost}
             >
               <StyledShopItemImage />
