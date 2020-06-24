@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, useAnimation } from 'framer-motion';
 import { usePrevious } from '../utils/hooks';
+import Cursor from '../img/cursor.png';
 
 const StyledFoeWrapper = styled.div`
   position: absolute;
@@ -16,6 +17,9 @@ const StyledFoe = styled(motion.div)`
   background-position: center;
   width: 300px;
   height: 475px;
+  &:hover {
+    cursor: url(${Cursor}), auto;
+  }
 `;
 
 const StyledHpBar = styled(motion.div)`
@@ -26,13 +30,13 @@ const StyledHpBar = styled(motion.div)`
   background: red;
   border: 4px solid #440303;
   &:before {
-    content: '';
-    position: absolute;
-    display: block;
     background: #fff;
-    width: ${(props) => 100 - (100 / props.maxHp) * props.hp}%;
+    content: '';
+    display: block;
     height: 100%;
+    position: absolute;
     right: 0;
+    width: ${(props) => 100 - (100 / props.maxHp) * props.hp}%;
   }
 `;
 
@@ -73,25 +77,10 @@ const Foe = React.memo(
       };
 
       animate();
-    }, [foeIndex, animationControls, animationHpControls]);
+    }, [foeIndex, animationControls]);
 
     const [hp, setHp] = useState(maxHp);
     const foeImage = require(`../img/${picture}`);
-
-    useEffect(() => {
-      const animate = async () => {
-        await animationControls.start({
-          filter: 'contrast(50%)',
-          transition: { duration: 0.1 },
-        });
-        animationControls.start({
-          filter: 'contrast(100%)',
-          transition: { duration: 0.2 },
-        });
-      };
-
-      if (hp !== maxHp && previousCode === code) animate();
-    }, [animationControls, code, hp, maxHp, previousCode]);
 
     function handleSetHp() {
       if (hp <= 0) {
