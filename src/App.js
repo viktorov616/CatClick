@@ -37,7 +37,7 @@ function App() {
   }, [passiveMoney]);
 
   function purchaseHandler(itemCost) {
-    setMoney((money) => money - itemCost);
+    setMoney((money) => Math.round(money - itemCost));
   }
 
   const handleFoeHit = useCallback(() => {

@@ -38,11 +38,12 @@ const StyledShopItem = styled.div`
 `;
 
 const StyledShopItemImage = styled.div`
-  width: 60px;
-  height: 60px;
   background-image: url(${(props) => props.img});
+  background-repeat: repeat;
   background-size: contain;
+  height: 50px;
   margin-right: 10px;
+  width: 50px;
 `;
 
 const StyledShopMultiplier = styled.div`
@@ -55,7 +56,7 @@ const StyledMultiplierNumber = styled.div`
     font-size: 15px;
   }
   span:last-child {
-    font-size: 30px;
+    font-size: 25px;
   }
 `;
 const StyledShopToggler = styled.div`
@@ -102,12 +103,15 @@ export default function Shop({
           const cost =
             shopStore[item] === 1
               ? initCost
-              : new Array(shopStore[item] - 1)
-                  .fill('')
-                  .reduce(
-                    (result, a, index) => result + initCost * 0.1 * (index + 1),
-                    initCost
-                  );
+              : Math.round(
+                  new Array(shopStore[item] - 1)
+                    .fill('')
+                    .reduce(
+                      (result, a, index) =>
+                        result + initCost * 0.1 * (index + 1),
+                      initCost
+                    )
+                );
 
           return (
             <StyledShopItem
