@@ -41,7 +41,15 @@ const StyledHpBar = styled(motion.div)`
 `;
 
 const Foe = React.memo(
-  ({ hp: maxHp, picture, triggerNextFoe, code, handleHitFoe, foeIndex }) => {
+  ({
+    hp: maxHp,
+    picture,
+    triggerNextFoe,
+    code,
+    handleHitFoe,
+    foeIndex,
+    heroAttackDamage,
+  }) => {
     const animationControls = useAnimation();
     const animationHpControls = useAnimation();
     const previousCode = usePrevious(code);
@@ -77,16 +85,18 @@ const Foe = React.memo(
       };
 
       animate();
-    }, [foeIndex, animationControls]);
+    }, [foeIndex, animationControls, animationHpControls]);
 
     const [hp, setHp] = useState(maxHp);
     const foeImage = require(`../img/${picture}`);
 
     function handleSetHp() {
-      if (hp <= 0) {
+      const updatedHp = hp - heroAttackDamage;
+
+      if (updatedHp <= 0) {
         triggerNextFoe();
       } else {
-        setHp(hp - 250);
+        setHp(updatedHp);
       }
     }
 

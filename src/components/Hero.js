@@ -16,7 +16,7 @@ const StyledHero = styled(motion.div)`
 
 const Hero = React.memo(({ animateHero, setAnimateHero }) => {
   const animationControls = useAnimation();
-  console.log({ animateHero });
+
   useEffect(() => {
     const animate = async () => {
       await animationControls.start({

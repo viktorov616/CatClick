@@ -2,7 +2,6 @@ import React, { useState, useReducer } from 'react';
 import styled from 'styled-components';
 import ShopOpened from '../img/scroll_opened.png';
 import ShopClosed from '../img/scroll_closed.png';
-import MoneyBuff from '../img/upgrade_moneybag.png';
 import CostCoins from '../img/cost_money.png';
 import shopConfig, { shopOrder } from '../configs/shop';
 
@@ -41,7 +40,7 @@ const StyledShopItem = styled.div`
 const StyledShopItemImage = styled.div`
   width: 60px;
   height: 60px;
-  background-image: url(${MoneyBuff});
+  background-image: url(${(props) => props.img});
   background-size: contain;
   margin-right: 10px;
 `;
@@ -76,7 +75,7 @@ const StyledItemCost = styled.div`
 `;
 
 export default function Shop({
-  moneyMult,
+  shopStore,
   dispatch,
   purchaseHandler,
   allMoney,
@@ -89,7 +88,7 @@ export default function Shop({
       dispatch({
         type: 'changeField',
         field: field,
-        value: moneyMult + 1,
+        value: shopStore[field] + 1,
       });
     }
   }
@@ -101,9 +100,9 @@ export default function Shop({
         shopOrder.map((item) => {
           const initCost = shopConfig[item].initialCost;
           const cost =
-            moneyMult === 1
+            shopStore[item] === 1
               ? initCost
-              : new Array(moneyMult - 1)
+              : new Array(shopStore[item] - 1)
                   .fill('')
                   .reduce(
                     (result, a, index) => result + initCost * 0.1 * (index + 1),
@@ -116,11 +115,13 @@ export default function Shop({
               onClick={() => itemClickHandler({ cost, field: item })}
               disabled={allMoney < cost}
             >
-              <StyledShopItemImage />
+              <StyledShopItemImage
+                img={require(`../img/${shopConfig[item].img}`)}
+              />
               <StyledShopMultiplier>
                 <StyledMultiplierNumber>
                   <span>x</span>
-                  <span>{moneyMult}</span>
+                  <span>{shopStore[item]}</span>
                 </StyledMultiplierNumber>
               </StyledShopMultiplier>
               <StyledItemCost>{cost}</StyledItemCost>

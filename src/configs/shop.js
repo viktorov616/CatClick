@@ -1,12 +1,14 @@
 const shop = {
-  moneyMulti: {
+  moneyMult: {
     initialCost: 300,
+    img: 'upgrade_moneybag.png',
   },
   attackDamage: {
-    initialCost: 300,
+    initialCost: 1000,
+    img: 'kunai.png',
   },
 };
 
 export default shop;
 
-export const shopOrder = ['moneyMulti', 'attackDamage'];
+export const shopOrder = ['moneyMult', 'attackDamage'];
