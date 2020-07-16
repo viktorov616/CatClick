@@ -1,9 +1,11 @@
-import React, { useState, useReuducer } from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 import styled from 'styled-components';
 import ShopOpened from '../img/scroll_opened.png';
 import ShopClosed from '../img/scroll_closed.png';
 import CostCoins from '../img/cost_money.png';
 import shopConfig, { shopOrder } from '../configs/shop';
+import produce from 'immer';
+import { secondsToMinutes } from '../utils/common'
 
 const StyledShop = styled.div`
   width: 209px;
@@ -83,16 +85,27 @@ export default function Shop({
 }) {
   const [shopStatus, setShopStatus] = useState(false);
   const [buffDuration, setBuffDuration] = useState({});
+  // console.log({buffDuration})
+  useEffect(() => {
+    let interval = null;
 
-  function buffCounter(field) {
-    console.log('b', buffDuration);
-    if (buffDuration[field]) {
-      setBuffDuration({
-        ...buffDuration,
-        [field]: buffDuration[field] - 1,
-      });
-    }
-  }
+    Object.entries(buffDuration).forEach(([key, timer]) => {
+      console.log({timer})
+      if (timer.active && timer.duration > 0) {
+        interval = setTimeout(() => {
+          setBuffDuration((oldBuffDuration) => produce(oldBuffDuration, (draft) => { draft[key].duration -= 1; }));
+        }, 1000);
+      } else {
+        console.log('Else dlya Anny')
+        clearInterval(interval);
+        setBuffDuration(produce(buffDuration, (draft) => { draft[key].active = false; }));
+      }
+
+      return () => {
+        clearInterval(interval);
+      };
+    });
+  }, [buffDuration]);
 
   function itemClickHandler({ cost, field }) {
     purchaseHandler(cost);
@@ -102,18 +115,13 @@ export default function Shop({
       value: shopStore[field] + 1,
     });
 
+    console.log(shopConfig[field].duration);
     if (shopConfig[field].duration) {
-      setTimeout(
-        () =>
-          dispatch({
-            type: 'changeField',
-            field: field,
-            value: 1,
-          }),
-        shopConfig[field].duration * 1000
+      setBuffDuration(
+        produce(buffDuration, (draft) => {
+          draft[field] = { active: true, duration: shopConfig[field].duration };
+        })
       );
-      setBuffDuration({ ...buffDuration, [field]: shopConfig[field].duration });
-      setInterval(() => buffCounter(field), 1000);
     }
   }
 
@@ -153,7 +161,7 @@ export default function Shop({
               <StyledShopMultiplier>
                 <StyledMultiplierNumber>
                   {shopConfig[item].duration ? (
-                    buffDuration[item]?.duration || '-'
+                    secondsToMinutes(buffDuration[item]?.duration) || '-'
                   ) : (
                     <>
                       <span>x</span>
