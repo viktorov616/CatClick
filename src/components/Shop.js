@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useReuducer } from 'react';
 import styled from 'styled-components';
 import ShopOpened from '../img/scroll_opened.png';
 import ShopClosed from '../img/scroll_closed.png';
@@ -82,15 +82,38 @@ export default function Shop({
   allMoney,
 }) {
   const [shopStatus, setShopStatus] = useState(false);
+  const [buffDuration, setBuffDuration] = useState({});
+
+  function buffCounter(field) {
+    console.log('b', buffDuration);
+    if (buffDuration[field]) {
+      setBuffDuration({
+        ...buffDuration,
+        [field]: buffDuration[field] - 1,
+      });
+    }
+  }
 
   function itemClickHandler({ cost, field }) {
-    if (allMoney >= cost) {
-      purchaseHandler(cost);
-      dispatch({
-        type: 'changeField',
-        field: field,
-        value: shopStore[field] + 1,
-      });
+    purchaseHandler(cost);
+    dispatch({
+      type: 'changeField',
+      field: field,
+      value: shopStore[field] + 1,
+    });
+
+    if (shopConfig[field].duration) {
+      setTimeout(
+        () =>
+          dispatch({
+            type: 'changeField',
+            field: field,
+            value: 1,
+          }),
+        shopConfig[field].duration * 1000
+      );
+      setBuffDuration({ ...buffDuration, [field]: shopConfig[field].duration });
+      setInterval(() => buffCounter(field), 1000);
     }
   }
 
@@ -112,20 +135,31 @@ export default function Shop({
                       initCost
                     )
                 );
+          const isItemDisabled =
+            allMoney < cost ||
+            (shopConfig[item].duration && shopStore[item] > 1);
 
           return (
             <StyledShopItem
               key={item}
-              onClick={() => itemClickHandler({ cost, field: item })}
-              disabled={allMoney < cost}
+              onClick={() => {
+                if (!isItemDisabled) itemClickHandler({ cost, field: item });
+              }}
+              disabled={isItemDisabled}
             >
               <StyledShopItemImage
                 img={require(`../img/${shopConfig[item].img}`)}
               />
               <StyledShopMultiplier>
                 <StyledMultiplierNumber>
-                  <span>x</span>
-                  <span>{shopStore[item]}</span>
+                  {shopConfig[item].duration ? (
+                    buffDuration[item]?.duration || '-'
+                  ) : (
+                    <>
+                      <span>x</span>
+                      <span>{shopStore[item]}</span>
+                    </>
+                  )}
                 </StyledMultiplierNumber>
               </StyledShopMultiplier>
               <StyledItemCost>{cost}</StyledItemCost>

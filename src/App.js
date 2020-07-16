@@ -23,10 +23,13 @@ const StyledApp = styled.div`
 
 function App() {
   const [money, setMoney] = useState(0);
-  const initialState = shopOrder.reduce((result, item) => ({ ...result, [item]: 1 }), {});
+  const initialState = shopOrder.reduce(
+    (result, item) => ({ ...result, [item]: 1 }),
+    {}
+  );
   const [shopStore, dispatch] = useReducer(basicFormReducer, initialState);
   const [animateHero, setAnimateHero] = useState(false);
-  const heroAttackDamage = HERO_BASE_DAMAGE * (shopStore.attackDamage || 1)
+  const heroAttackDamage = HERO_BASE_DAMAGE * (shopStore.attackDamage || 1);
 
   const passiveMoney = useCallback(() => {
     setMoney((newMoney) => newMoney + 1 * shopStore.moneyMult);
@@ -41,9 +44,9 @@ function App() {
   }
 
   const handleFoeHit = useCallback(() => {
-    setMoney((newMoney) => newMoney + 10);
+    setMoney((newMoney) => newMoney + 10 * shopStore.moneyBuff);
     setAnimateHero(true);
-  }, []);
+  }, [shopStore.moneyBuff]);
 
   return (
     <>
