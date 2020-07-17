@@ -5,7 +5,7 @@ import ShopClosed from '../img/scroll_closed.png';
 import CostCoins from '../img/cost_money.png';
 import shopConfig, { shopOrder } from '../configs/shop';
 import produce from 'immer';
-import { secondsToMinutes } from '../utils/common'
+import { secondsToMinutes } from '../utils/common';
 
 const StyledShop = styled.div`
   width: 209px;
@@ -41,8 +41,9 @@ const StyledShopItem = styled.div`
 
 const StyledShopItemImage = styled.div`
   background-image: url(${(props) => props.img});
-  background-repeat: repeat;
+  background-repeat: no-repeat;
   background-size: contain;
+  background-position: center;
   height: 50px;
   margin-right: 10px;
   width: 50px;
@@ -58,7 +59,7 @@ const StyledMultiplierNumber = styled.div`
     font-size: 15px;
   }
   span:last-child {
-    font-size: 25px;
+    font-size: 17px;
   }
 `;
 const StyledShopToggler = styled.div`
@@ -75,6 +76,7 @@ const StyledItemCost = styled.div`
   padding-left: 30px;
   color: #d87f0e;
   margin-top: 5px;
+  user-select: none;
 `;
 
 export default function Shop({
@@ -85,20 +87,30 @@ export default function Shop({
 }) {
   const [shopStatus, setShopStatus] = useState(false);
   const [buffDuration, setBuffDuration] = useState({});
-  // console.log({buffDuration})
   useEffect(() => {
     let interval = null;
 
     Object.entries(buffDuration).forEach(([key, timer]) => {
-      console.log({timer})
       if (timer.active && timer.duration > 0) {
         interval = setTimeout(() => {
-          setBuffDuration((oldBuffDuration) => produce(oldBuffDuration, (draft) => { draft[key].duration -= 1; }));
+          setBuffDuration((oldBuffDuration) =>
+            produce(oldBuffDuration, (draft) => {
+              draft[key].duration -= 1;
+            })
+          );
         }, 1000);
       } else {
-        console.log('Else dlya Anny')
         clearInterval(interval);
-        setBuffDuration(produce(buffDuration, (draft) => { draft[key].active = false; }));
+        setBuffDuration(
+          produce(buffDuration, (draft) => {
+            draft[key].active = false;
+          })
+        );
+        dispatch({
+          type: 'changeField',
+          field: key,
+          value: 1,
+        });
       }
 
       return () => {
@@ -161,7 +173,12 @@ export default function Shop({
               <StyledShopMultiplier>
                 <StyledMultiplierNumber>
                   {shopConfig[item].duration ? (
-                    secondsToMinutes(buffDuration[item]?.duration) || '-'
+                    <>
+                      <span></span>
+                      <span>
+                        {secondsToMinutes(buffDuration[item]?.duration) || '-'}
+                      </span>
+                    </>
                   ) : (
                     <>
                       <span>x</span>

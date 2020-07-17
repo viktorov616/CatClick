@@ -5,7 +5,7 @@ const shop = {
   },
   moneyBuff: {
     initialCost: 1,
-    img: 'upgrade_moneybag.png',
+    img: 'money_buff.png',
     duration: 120,
   },
   attackDamage: {
