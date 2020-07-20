@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ShopOpened from '../img/scroll_opened.png';
 import ShopClosed from '../img/scroll_closed.png';
 import CostCoins from '../img/cost_money.png';
+import Line from '../img/line.png';
 import shopConfig, { shopOrder } from '../configs/shop';
 import produce from 'immer';
 import { secondsToMinutes } from '../utils/common';
@@ -22,23 +23,41 @@ const StyledShop = styled.div`
 
 const StyledShopItem = styled.div`
   width: calc(100% - 90px);
-  height: 90px;
   margin-right: 10px;
   display: flex;
   padding-left: 15px;
   cursor: pointer;
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  position: relative;
 
   ${(props) =>
     props.disabled &&
     `
 		opacity: 0.5;
 		cursor: default;
-
 	`}
-`;
 
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    height: 5px;
+    background-image: url(${Line});
+    background-size: contains;
+    background-repeat: no-repeat;
+    /* background-position: 0% 50%; */
+  }
+`;
+const StyledShopItemName = styled.p`
+  font-size: 12px;
+  color: #11110f;
+  margin-bottom: 5px;
+  text-align: center;
+  width: 100%;
+
+`;
 const StyledShopItemImage = styled.div`
   background-image: url(${(props) => props.img});
   background-repeat: no-repeat;
@@ -168,6 +187,9 @@ export default function Shop({
               }}
               disabled={isItemDisabled}
             >
+              <StyledShopItemName>
+                {shopConfig[item].name}
+              </StyledShopItemName>
               <StyledShopItemImage
                 img={require(`../img/${shopConfig[item].img}`)}
               />
