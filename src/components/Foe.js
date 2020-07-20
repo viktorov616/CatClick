@@ -49,6 +49,7 @@ const Foe = React.memo(
     handleHitFoe,
     foeIndex,
     heroAttackDamage,
+    foeRef,
   }) => {
     const animationControls = useAnimation();
     const animationHpControls = useAnimation();
@@ -104,6 +105,7 @@ const Foe = React.memo(
       <StyledFoeWrapper>
         <StyledFoe
           key="visibleNotice"
+          ref={foeRef}
           className="info-notice__inner"
           style={{
             transformOrigin: 'top left',

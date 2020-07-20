@@ -3,7 +3,7 @@ import orderConfig from '../configs/order';
 import foesConfig from '../configs/foes';
 import Foe from './Foe';
 
-export default function Foes({ handleFoeHit, heroAttackDamage }) {
+export default function Foes({ handleFoeHit, heroAttackDamage, foeRef }) {
   const [foeIndex, setFoeIndex] = useState(0);
 
   const handleTriggerNextFoe = useCallback(() => {
@@ -18,6 +18,7 @@ export default function Foes({ handleFoeHit, heroAttackDamage }) {
       triggerNextFoe={handleTriggerNextFoe}
       handleHitFoe={handleFoeHit}
       heroAttackDamage={heroAttackDamage}
+      foeRef={foeRef}
     />
   );
 }

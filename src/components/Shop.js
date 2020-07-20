@@ -84,9 +84,10 @@ export default function Shop({
   dispatch,
   purchaseHandler,
   allMoney,
+  buffDuration,
+  setBuffDuration,
 }) {
   const [shopStatus, setShopStatus] = useState(false);
-  const [buffDuration, setBuffDuration] = useState({});
   useEffect(() => {
     let interval = null;
 
@@ -117,7 +118,7 @@ export default function Shop({
         clearInterval(interval);
       };
     });
-  }, [buffDuration]);
+  }, [buffDuration, dispatch, setBuffDuration]);
 
   function itemClickHandler({ cost, field }) {
     purchaseHandler(cost);

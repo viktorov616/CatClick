@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useReducer } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useReducer,
+  useRef,
+} from 'react';
 import styled from 'styled-components';
 import leaf from './img/bg1.jpg';
 import StyledGlobal from './styles/globalStyles';
@@ -28,8 +34,12 @@ function App() {
     {}
   );
   const [shopStore, dispatch] = useReducer(basicFormReducer, initialState);
+  const [buffDuration, setBuffDuration] = useState({});
+
   const [animateHero, setAnimateHero] = useState(false);
   const heroAttackDamage = HERO_BASE_DAMAGE * (shopStore.attackDamage || 1);
+
+  const foeRef = useRef(null);
 
   const passiveMoney = useCallback(() => {
     setMoney((newMoney) => newMoney + 1 * shopStore.moneyMult);
@@ -38,6 +48,10 @@ function App() {
   useEffect(() => {
     setInterval(passiveMoney, 1000);
   }, [passiveMoney]);
+
+  useEffect(() => {
+    if (buffDuration.autoAttack?.active) foeRef.current.click();
+  }, [buffDuration]);
 
   function purchaseHandler(itemCost) {
     setMoney((money) => Math.round(money - itemCost));
@@ -58,9 +72,15 @@ function App() {
           shopStore={shopStore}
           purchaseHandler={purchaseHandler}
           allMoney={money}
+          buffDuration={buffDuration}
+          setBuffDuration={setBuffDuration}
         />
         <Hero animateHero={animateHero} setAnimateHero={setAnimateHero} />
-        <Foes handleFoeHit={handleFoeHit} heroAttackDamage={heroAttackDamage} />
+        <Foes
+          handleFoeHit={handleFoeHit}
+          heroAttackDamage={heroAttackDamage}
+          foeRef={foeRef}
+        />
       </StyledApp>
     </>
   );

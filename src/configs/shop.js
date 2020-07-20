@@ -4,7 +4,7 @@ const shop = {
     img: 'upgrade_moneybag.png',
   },
   moneyBuff: {
-    initialCost: 1,
+    initialCost: 1000,
     img: 'money_buff.png',
     duration: 120,
   },
@@ -12,8 +12,13 @@ const shop = {
     initialCost: 1000,
     img: 'kunai.png',
   },
+  autoAttack: {
+    initialCost: 1000,
+    img: 'kunai.png',
+    duration: 120,
+  },
 };
 
 export default shop;
 
-export const shopOrder = ['moneyMult', 'moneyBuff', 'attackDamage'];
+export const shopOrder = ['moneyMult', 'moneyBuff', 'attackDamage', 'autoAttack'];
