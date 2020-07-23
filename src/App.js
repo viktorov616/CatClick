@@ -62,6 +62,10 @@ function App() {
     setAnimateHero(true);
   }, [shopStore.moneyBuff]);
 
+  const setMoneyForKill = useCallback(({ foe }) => {
+    setMoney((money) => money + foe.hp * 0.1);
+  }, []);
+
   return (
     <>
       <StyledGlobal />
@@ -77,6 +81,7 @@ function App() {
         />
         <Hero animateHero={animateHero} setAnimateHero={setAnimateHero} />
         <Foes
+          triggerNextFoeCallback={setMoneyForKill}
           handleFoeHit={handleFoeHit}
           heroAttackDamage={heroAttackDamage}
           foeRef={foeRef}
