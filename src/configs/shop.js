@@ -3,27 +3,27 @@ const shop = {
     name: 'Money mult.',
     initialCost: 300,
     img: 'upgrade_moneybag.png',
-    desc: 'Some description for Item 1',
+    desc: 'Increases money per second',
   },
   moneyBuff: {
     name: 'Passive money buff',
     initialCost: 1000,
     img: 'money_buff.png',
     duration: 120,
-    desc: 'Some description for Item 2',
+    desc: 'Increases money per hit for a limited time',
   },
   attackDamage: {
     name: 'Attack damage',
     initialCost: 1000,
     img: 'kunai.png',
-    desc: 'Some description for Item 3',
+    desc: 'Increases hero attack damage',
   },
   autoAttack: {
     name: 'Auto attack',
     initialCost: 1000,
     img: 'kunai.png',
     duration: 120,
-    desc: 'Some description for Item 4',
+    desc: 'Enables hero auto attack for a limited time',
   },
 };
 

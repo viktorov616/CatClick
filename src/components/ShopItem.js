@@ -15,10 +15,27 @@ const StyledTooltip = styled.div`
   border-radius: 6px;
   position: absolute;
   z-index: 1;
+  right: calc(-100% - 10px);
+  top: 25px;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-origin: top left;
+  transform: scale3d(.1, .5, .1);
 `;
 
+const StyledShopItemWrapper = styled.div`
+  position: relative;
+  width: calc(100% - 64px);
+  margin-left: 12px;
+
+  &:hover {
+    ${StyledTooltip} {
+      visibility: visible;
+      transform: scale3d(1, 1, 1);
+    }
+  }
+`
+
 const StyledShopItem = styled.div`
-  width: calc(100% - 90px);
   margin-right: 10px;
   display: flex;
   padding-left: 15px;
@@ -44,12 +61,6 @@ const StyledShopItem = styled.div`
     background-size: contains;
     background-repeat: no-repeat;
     /* background-position: 0% 50%; */
-  }
-
-  &:hover {
-    ${StyledTooltip} {
-      visibility: visible;
-    }
   }
 `;
 
@@ -106,33 +117,35 @@ export default function ShopItem({
   shopConfig,
 }) {
   return (
-    <StyledShopItem
-      onClick={() => {
-        if (!isItemDisabled) itemClickHandler({ cost, field: code });
-      }}
-      disabled={isItemDisabled}
-    >
-      <StyledShopItemName>{shopConfig[code].name}</StyledShopItemName>
-      <StyledShopItemImage img={require(`../img/${shopConfig[code].img}`)} />
-      <StyledShopMultiplier>
-        <StyledMultiplierNumber>
-          {shopConfig[code].duration ? (
-            <>
-              <span></span>
-              <span>
-                {secondsToMinutes(buffDuration[code]?.duration) || '-'}
-              </span>
-            </>
-          ) : (
-            <>
-              <span>x</span>
-              <span>{shopStore[code]}</span>
-            </>
-          )}
-        </StyledMultiplierNumber>
-      </StyledShopMultiplier>
-      <StyledItemCost>{cost}</StyledItemCost>
+    <StyledShopItemWrapper>
+      <StyledShopItem
+        onClick={() => {
+          if (!isItemDisabled) itemClickHandler({ cost, field: code });
+        }}
+        disabled={isItemDisabled}
+      >
+        <StyledShopItemName>{shopConfig[code].name}</StyledShopItemName>
+        <StyledShopItemImage img={require(`../img/${shopConfig[code].img}`)} />
+        <StyledShopMultiplier>
+          <StyledMultiplierNumber>
+            {shopConfig[code].duration ? (
+              <>
+                <span></span>
+                <span>
+                  {secondsToMinutes(buffDuration[code]?.duration) || '-'}
+                </span>
+              </>
+            ) : (
+              <>
+                <span>x</span>
+                <span>{shopStore[code]}</span>
+              </>
+            )}
+          </StyledMultiplierNumber>
+        </StyledShopMultiplier>
+        <StyledItemCost>{cost}</StyledItemCost>
+      </StyledShopItem>
       <StyledTooltip>{shopConfig[code].desc}</StyledTooltip>
-    </StyledShopItem>
+    </StyledShopItemWrapper>
   );
 }
