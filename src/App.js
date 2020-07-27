@@ -12,7 +12,8 @@ import Hero from './components/Hero';
 import Foes from './components/Foes';
 import Shop from './components/Shop';
 import Money from './components/Money';
-import { basicFormReducer } from './utils/hooks';
+
+import { basicFormReducer, useSaveData } from './utils/hooks';
 import { shopOrder } from './configs/shop';
 
 import './App.css';
@@ -28,13 +29,13 @@ const StyledApp = styled.div`
 `;
 
 function App() {
-  const [money, setMoney] = useState(0);
-  const initialState = shopOrder.reduce(
-    (result, item) => ({ ...result, [item]: 1 }),
-    {}
-  );
+  const [money, setMoney] = useState(+localStorage.getItem('money') || 0);
+  const initialState = localStorage.getItem('shopStore')
+    ? JSON.parse(localStorage.getItem('shopStore'))
+    : shopOrder.reduce((result, item) => ({ ...result, [item]: 1 }), {});
   const [shopStore, dispatch] = useReducer(basicFormReducer, initialState);
   const [buffDuration, setBuffDuration] = useState({});
+  useSaveData({ money, shopStore });
 
   const [animateHero, setAnimateHero] = useState(false);
   const heroAttackDamage = HERO_BASE_DAMAGE * (shopStore.attackDamage || 1);
