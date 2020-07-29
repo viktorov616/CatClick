@@ -6,6 +6,8 @@ import ShopOpened from '../img/scroll_opened.png';
 import ShopClosed from '../img/scroll_closed.png';
 import shopConfig, { shopOrder } from '../configs/shop';
 import produce from 'immer';
+import { useSaveData } from '../utils/hooks';
+
 
 const StyledShop = styled.div`
   width: 209px;
@@ -33,7 +35,9 @@ export default function Shop({
   buffDuration,
   setBuffDuration,
 }) {
-  const [shopStatus, setShopStatus] = useState(false);
+  const [shopStatus, setShopStatus] = useState(Boolean(localStorage.getItem('shopStatus')));
+  useSaveData({ shopStatus });
+
   useEffect(() => {
     let interval = null;
 

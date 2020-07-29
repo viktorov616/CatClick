@@ -29,14 +29,16 @@ export function usePrevious(value) {
   return ref.current;
 }
 
-export function useSaveData({ money, shopStore }) {
+export function useSaveData(data) {
   const [timer, setTimer] = useState(true);
   useEffect(() => {
     setTimeout(() => setTimer(false), 60 * 1000);
     if (!timer) {
-      localStorage.setItem('money', money);
-      localStorage.setItem('shopStore', JSON.stringify(shopStore));
+      Object.entries(data).forEach(([key, value]) => {
+        localStorage.setItem(key, JSON.stringify(value));
+      });
     }
     setTimer(true);
+    // eslint-disable-next-line
   }, [timer]);
 }

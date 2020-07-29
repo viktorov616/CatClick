@@ -34,8 +34,8 @@ function App() {
     ? JSON.parse(localStorage.getItem('shopStore'))
     : shopOrder.reduce((result, item) => ({ ...result, [item]: 1 }), {});
   const [shopStore, dispatch] = useReducer(basicFormReducer, initialState);
-  const [buffDuration, setBuffDuration] = useState({});
-  useSaveData({ money, shopStore });
+  const [buffDuration, setBuffDuration] = useState(JSON.parse(localStorage.getItem('buffDuration') || '{}'));
+  useSaveData({ money, shopStore, buffDuration });
 
   const [animateHero, setAnimateHero] = useState(false);
   const heroAttackDamage = HERO_BASE_DAMAGE * (shopStore.attackDamage || 1);
