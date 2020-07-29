@@ -16,7 +16,7 @@ const shop = {
     name: 'Attack damage',
     initialCost: 1000,
     img: 'kunai.png',
-    desc: 'Increases hero attack damage',
+    desc: 'Increases hero attack damage/',
   },
   autoAttack: {
     name: 'Auto attack',
