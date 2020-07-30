@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import ShopItem from './ShopItem';
 import styled from 'styled-components';
@@ -7,7 +7,6 @@ import ShopClosed from '../img/scroll_closed.png';
 import shopConfig, { shopOrder } from '../configs/shop';
 import produce from 'immer';
 import { useSaveData } from '../utils/hooks';
-
 
 const StyledShop = styled.div`
   width: 209px;
@@ -35,37 +34,37 @@ export default function Shop({
   buffDuration,
   setBuffDuration,
 }) {
-  const [shopStatus, setShopStatus] = useState(Boolean(localStorage.getItem('shopStatus')));
+  const [shopStatus, setShopStatus] = useState(
+    Boolean(localStorage.getItem('shopStatus'))
+  );
+  const intervals = useRef({});
   useSaveData({ shopStatus });
 
   useEffect(() => {
-    let interval = null;
-
     Object.entries(buffDuration).forEach(([key, timer]) => {
-      if (timer.active && timer.duration > 0) {
-        interval = setTimeout(() => {
+      if (timer.active && !intervals.current[key]) {
+        intervals.current[key] = setInterval(() => {
           setBuffDuration((oldBuffDuration) =>
             produce(oldBuffDuration, (draft) => {
-              draft[key].duration -= 1;
+              if (oldBuffDuration[key]?.duration === 0) {
+                draft[key].active = false;
+                clearInterval(intervals.current[key]);
+                delete intervals.current[key];
+                dispatch({
+                  type: 'changeField',
+                  field: key,
+                  value: 1,
+                });
+              } else draft[key].duration -= 1;
             })
           );
         }, 1000);
-      } else {
-        clearInterval(interval);
-        setBuffDuration(
-          produce(buffDuration, (draft) => {
-            draft[key].active = false;
-          })
-        );
-        dispatch({
-          type: 'changeField',
-          field: key,
-          value: 1,
-        });
       }
 
       return () => {
-        clearInterval(interval);
+        Object.values(intervals.current).forEach((interval) =>
+          clearInterval(interval)
+        );
       };
     });
   }, [buffDuration, dispatch, setBuffDuration]);
