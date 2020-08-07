@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import orderConfig from '../configs/order';
 import foesConfig from '../configs/foes';
 import Foe from './Foe';
 
@@ -8,19 +7,22 @@ export default function Foes({
   heroAttackDamage,
   foeRef,
   triggerNextFoeCallback,
+  handleTriggerNextLocation,
+  order,
 }) {
   const [foeIndex, setFoeIndex] = useState(0);
 
   const handleTriggerNextFoe = useCallback(() => {
-    triggerNextFoeCallback({ foe: foesConfig[orderConfig[foeIndex]] });
-    setFoeIndex((index) => (index >= orderConfig.length - 1 ? 0 : index + 1));
-  }, [foeIndex, triggerNextFoeCallback]);
+    triggerNextFoeCallback({ foe: foesConfig[order[foeIndex]] });
+    setFoeIndex((index) => (index >= order.length - 1 ? 0 : index + 1));
+    if (foeIndex >= order.length - 1) handleTriggerNextLocation();
+  }, [foeIndex, triggerNextFoeCallback, handleTriggerNextLocation, order]);
 
   return (
     <Foe
-      {...foesConfig[orderConfig[foeIndex]]}
+      {...foesConfig[order[foeIndex]]}
       foeIndex={foeIndex}
-      code={orderConfig[foeIndex]}
+      code={order[foeIndex]}
       triggerNextFoe={handleTriggerNextFoe}
       handleHitFoe={handleFoeHit}
       heroAttackDamage={heroAttackDamage}
