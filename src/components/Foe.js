@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import styled from 'styled-components';
 import { motion, useAnimation } from 'framer-motion';
 import { usePrevious } from '../utils/hooks';
 import Cursor from '../img/cursor.png';
+import { basicFormReducer } from '../utils/hooks';
+import skillsConfig from '../configs/skills';
 
 const StyledFoeWrapper = styled.div`
   position: absolute;
@@ -50,10 +52,65 @@ const Foe = React.memo(
     foeIndex,
     heroAttackDamage,
     foeRef,
+    skills,
   }) => {
+    console.log({ skillsConfig });
     const animationControls = useAnimation();
     const animationHpControls = useAnimation();
     const previousCode = usePrevious(code);
+    const initialState =
+      skills?.reduce((result, skill) => {
+        result[skill] = {
+          cooldown: skillsConfig[skill].initialDelay,
+          active: false,
+          timerId: null,
+        };
+        return result;
+      }, {}) ?? {};
+    const [skillsState, dispatch] = useReducer(basicFormReducer, initialState);
+
+    useEffect(() => {
+      Object.entries(skillsState).forEach(([field, state]) => {
+        const { active, timerId, cooldown } = state;
+        if (!active && !timerId) {
+          const newTimerId = setTimeout(() => {
+            dispatch({
+              type: 'changeField',
+              field,
+              value: {
+                ...state,
+                timerId: null,
+                active: true,
+                cooldown:
+                  skillsConfig[field].cooldown + skillsConfig[field].duration,
+              },
+            });
+          }, cooldown * 1000);
+
+          dispatch({
+            type: 'changeField',
+            field,
+            value: {
+              ...state,
+              timerId: newTimerId,
+            },
+          });
+        } else if (active) {
+          setTimeout(() => {
+            dispatch({
+              type: 'changeField',
+              field,
+              value: {
+                ...state,
+                active: false,
+                cooldown: skillsConfig[field].cooldown
+              },
+            });
+          }, skillsConfig[field].duration * 1000);
+
+        }
+      });
+    }, [skillsState]);
 
     useEffect(() => {
       setHp(maxHp);
@@ -115,8 +172,10 @@ const Foe = React.memo(
           initial={{ opacity: 0, scale: 0.1 }}
           foeImage={foeImage}
           onClick={() => {
-            handleHitFoe();
-            handleSetHp();
+            if (!skillsState.block?.active) {
+              handleHitFoe();
+              handleSetHp();
+            }
           }}
         ></StyledFoe>
         <StyledHpBar animate={animationHpControls} maxHp={maxHp} hp={hp} />
