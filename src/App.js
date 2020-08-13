@@ -98,6 +98,7 @@ function App() {
           foeRef={foeRef}
           handleTriggerNextLocation={handleTriggerNextLocation}
           order={orderConfig[locationIndex].foes}
+          location={locationIndex}
         />
       </StyledApp>
     </>

@@ -9,6 +9,7 @@ export default function Foes({
   triggerNextFoeCallback,
   handleTriggerNextLocation,
   order,
+  location,
 }) {
   const [foeIndex, setFoeIndex] = useState(0);
 
@@ -20,6 +21,7 @@ export default function Foes({
 
   return (
     <Foe
+      key={`location-${location}_foe-${foeIndex}`}
       {...foesConfig[order[foeIndex]]}
       foeIndex={foeIndex}
       code={order[foeIndex]}

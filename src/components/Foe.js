@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, useAnimation } from 'framer-motion';
 import { usePrevious } from '../utils/hooks';
@@ -54,7 +54,6 @@ const Foe = React.memo(
     foeRef,
     skills,
   }) => {
-    console.log({ skillsConfig });
     const animationControls = useAnimation();
     const animationHpControls = useAnimation();
     const previousCode = usePrevious(code);
@@ -69,52 +68,54 @@ const Foe = React.memo(
       }, {}) ?? {};
     const [skillsState, dispatch] = useReducer(basicFormReducer, initialState);
 
+    const timers = useRef({});
+    // useEffect(() => {
+    //   Object.entries(skillsState).forEach(([field, state]) => {
+    //     const { active, timerId, cooldown } = state;
+
+    //     if (!active && !timerId) {
+    //       timers.current[field] = setTimeout(() => {
+    //         dispatch({
+    //           type: 'changeField',
+    //           field,
+    //           value: {
+    //             ...state,
+    //             timerId: null,
+    //             active: true,
+    //             cooldown:
+    //               skillsConfig[field].cooldown + skillsConfig[field].duration,
+    //           },
+    //         });
+    //       }, cooldown * 1000);
+    //       dispatch({
+    //         type: 'changeField',
+    //         field,
+    //         value: {
+    //           ...state,
+    //           timerId: timers.current[field],
+    //         },
+    //       });
+    //     } else if (active) {
+    //       setTimeout(() => {
+    //         dispatch({
+    //           type: 'changeField',
+    //           field,
+    //           value: {
+    //             ...state,
+    //             active: false,
+    //             cooldown: skillsConfig[field].cooldown,
+    //           },
+    //         });
+    //       }, skillsConfig[field].duration * 1000);
+    //     }
+    //   });
+    // }, [skillsState]);
+
     useEffect(() => {
-      Object.entries(skillsState).forEach(([field, state]) => {
-        const { active, timerId, cooldown } = state;
-        if (!active && !timerId) {
-          const newTimerId = setTimeout(() => {
-            dispatch({
-              type: 'changeField',
-              field,
-              value: {
-                ...state,
-                timerId: null,
-                active: true,
-                cooldown:
-                  skillsConfig[field].cooldown + skillsConfig[field].duration,
-              },
-            });
-          }, cooldown * 1000);
-
-          dispatch({
-            type: 'changeField',
-            field,
-            value: {
-              ...state,
-              timerId: newTimerId,
-            },
-          });
-        } else if (active) {
-          setTimeout(() => {
-            dispatch({
-              type: 'changeField',
-              field,
-              value: {
-                ...state,
-                active: false,
-                cooldown: skillsConfig[field].cooldown
-              },
-            });
-          }, skillsConfig[field].duration * 1000);
-
-        }
-      });
-    }, [skillsState]);
-
-    useEffect(() => {
-      setHp(maxHp);
-    }, [maxHp, foeIndex]);
+      return () => {
+        Object.values(timers).forEach((timer) => clearTimeout(timer));
+      };
+    }, []);
 
     useEffect(() => {
       const animate = async () => {
@@ -161,9 +162,7 @@ const Foe = React.memo(
     return (
       <StyledFoeWrapper>
         <StyledFoe
-          key="visibleNotice"
           ref={foeRef}
-          className="info-notice__inner"
           style={{
             transformOrigin: 'top left',
             display: previousCode !== code ? 'none' : 'block',
@@ -177,7 +176,7 @@ const Foe = React.memo(
               handleSetHp();
             }
           }}
-        ></StyledFoe>
+        />
         <StyledHpBar animate={animationHpControls} maxHp={maxHp} hp={hp} />
       </StyledFoeWrapper>
     );

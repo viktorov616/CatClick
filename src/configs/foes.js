@@ -16,6 +16,11 @@ const foes = {
     picture: 'kaguya.png',
     skills: ['block'],
   },
+  boss2: {
+    hp: '300',
+    picture: 'kaguya.png',
+    skills: ['substitution'],
+  },
 };
 
 export default foes;
