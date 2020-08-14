@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useReducer, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, useAnimation } from 'framer-motion';
-import { usePrevious } from '../utils/hooks';
 import Cursor from '../img/cursor.png';
 import { basicFormReducer } from '../utils/hooks';
 import skillsConfig from '../configs/skills';
@@ -56,7 +55,6 @@ const Foe = React.memo(
   }) => {
     const animationControls = useAnimation();
     const animationHpControls = useAnimation();
-    const previousCode = usePrevious(code);
     const initialState =
       skills?.reduce((result, skill) => {
         result[skill] = {
@@ -69,47 +67,47 @@ const Foe = React.memo(
     const [skillsState, dispatch] = useReducer(basicFormReducer, initialState);
 
     const timers = useRef({});
-    // useEffect(() => {
-    //   Object.entries(skillsState).forEach(([field, state]) => {
-    //     const { active, timerId, cooldown } = state;
+    useEffect(() => {
+      Object.entries(skillsState).forEach(([field, state]) => {
+        const { active, timerId, cooldown } = state;
 
-    //     if (!active && !timerId) {
-    //       timers.current[field] = setTimeout(() => {
-    //         dispatch({
-    //           type: 'changeField',
-    //           field,
-    //           value: {
-    //             ...state,
-    //             timerId: null,
-    //             active: true,
-    //             cooldown:
-    //               skillsConfig[field].cooldown + skillsConfig[field].duration,
-    //           },
-    //         });
-    //       }, cooldown * 1000);
-    //       dispatch({
-    //         type: 'changeField',
-    //         field,
-    //         value: {
-    //           ...state,
-    //           timerId: timers.current[field],
-    //         },
-    //       });
-    //     } else if (active) {
-    //       setTimeout(() => {
-    //         dispatch({
-    //           type: 'changeField',
-    //           field,
-    //           value: {
-    //             ...state,
-    //             active: false,
-    //             cooldown: skillsConfig[field].cooldown,
-    //           },
-    //         });
-    //       }, skillsConfig[field].duration * 1000);
-    //     }
-    //   });
-    // }, [skillsState]);
+        if (!active && !timerId) {
+          timers.current[field] = setTimeout(() => {
+            dispatch({
+              type: 'changeField',
+              field,
+              value: {
+                ...state,
+                timerId: null,
+                active: true,
+                cooldown:
+                  skillsConfig[field].cooldown + skillsConfig[field].duration,
+              },
+            });
+          }, cooldown * 1000);
+          dispatch({
+            type: 'changeField',
+            field,
+            value: {
+              ...state,
+              timerId: timers.current[field],
+            },
+          });
+        } else if (active) {
+          setTimeout(() => {
+            dispatch({
+              type: 'changeField',
+              field,
+              value: {
+                ...state,
+                active: false,
+                cooldown: skillsConfig[field].cooldown,
+              },
+            });
+          }, skillsConfig[field].duration * 1000);
+        }
+      });
+    }, [skillsState]);
 
     useEffect(() => {
       return () => {
@@ -165,7 +163,7 @@ const Foe = React.memo(
           ref={foeRef}
           style={{
             transformOrigin: 'top left',
-            display: previousCode !== code ? 'none' : 'block',
+            display: 'block',
           }}
           animate={animationControls}
           initial={{ opacity: 0, scale: 0.1 }}

@@ -4,14 +4,17 @@ import React, {
   useCallback,
   useReducer,
   useRef,
+  useMemo,
 } from 'react';
 import styled from 'styled-components';
 import StyledGlobal from './styles/globalStyles';
 import Hero from './components/Hero';
 import Foes from './components/Foes';
 import Shop from './components/Shop';
+import Background from './components/Background';
 import Money from './components/Money';
 import orderConfig from './configs/order';
+import ColorThief from 'colorthief';
 
 import { basicFormReducer, useSaveData } from './utils/hooks';
 import { shopOrder } from './configs/shop';
@@ -21,11 +24,11 @@ import './App.css';
 const HERO_BASE_DAMAGE = 250;
 
 const StyledApp = styled.div`
-  background-image: url(${(props) => props.bg});
-  background-repeat: no-repeat;
-  background-size: 110%;
   height: 100%;
   position: relative;
+  ${({bgColor}) => bgColor && `background-color: rgb(${bgColor.join(',')});`}
+  transition: background-color 2s ease;
+  will-change: background-color;
 `;
 
 function App() {
@@ -46,6 +49,14 @@ function App() {
   const foeRef = useRef(null);
   const locationImage = require(`./img/${orderConfig[locationIndex].location}`);
 
+  const bgColor = useMemo(() => {
+    const cf = new ColorThief();
+    const img = new Image();
+    img.src = require(`./img/${orderConfig[locationIndex].location}`);
+    const bgColor = img.complete ? cf.getColor(img, 200) : null;
+    return bgColor;
+  }, [locationIndex]);
+
   const passiveMoney = useCallback(() => {
     setMoney((newMoney) => newMoney + 1 * shopStore.moneyMult);
   }, [shopStore.moneyMult]);
@@ -57,6 +68,14 @@ function App() {
   useEffect(() => {
     if (buffDuration.autoAttack?.active) foeRef.current.click();
   }, [buffDuration]);
+
+  // prefetch locations images
+  useEffect(() => {
+    orderConfig.forEach(({ location }) => {
+      const img = new Image();
+      img.src = require(`./img/${location}`);
+    });
+  }, []);
 
   function purchaseHandler(itemCost) {
     setMoney((money) => Math.round(money - itemCost));
@@ -80,7 +99,8 @@ function App() {
   return (
     <>
       <StyledGlobal />
-      <StyledApp className="App" bg={locationImage}>
+      <StyledApp className="App" bgColor={bgColor}>
+        <Background key={locationIndex} bg={locationImage} />
         <Money money={money} />
         <Shop
           dispatch={dispatch}
