@@ -62,7 +62,7 @@ function App() {
     setMoney((money) => Math.round(money - itemCost));
   }
 
-  const handleFoeHit = useCallback(() => {
+  const handleHitFoe = useCallback(() => {
     setMoney((newMoney) => newMoney + 10 * shopStore.moneyBuff);
     setAnimateHero(true);
   }, [shopStore.moneyBuff]);
@@ -93,7 +93,7 @@ function App() {
         <Hero animateHero={animateHero} setAnimateHero={setAnimateHero} />
         <Foes
           triggerNextFoeCallback={setMoneyForKill}
-          handleFoeHit={handleFoeHit}
+          handleHitFoe={handleHitFoe}
           heroAttackDamage={heroAttackDamage}
           foeRef={foeRef}
           handleTriggerNextLocation={handleTriggerNextLocation}

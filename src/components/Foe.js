@@ -66,50 +66,52 @@ const Foe = React.memo(
         };
         return result;
       }, {}) ?? {};
+    const foeImage = require(`../img/${picture}`);
     const [skillsState, dispatch] = useReducer(basicFormReducer, initialState);
+    const [computedFoeImage, setComputedFoeImage] = useState(foeImage);
 
     const timers = useRef({});
-    // useEffect(() => {
-    //   Object.entries(skillsState).forEach(([field, state]) => {
-    //     const { active, timerId, cooldown } = state;
+    useEffect(() => {
+      Object.entries(skillsState).forEach(([field, state]) => {
+        const { active, timerId, cooldown } = state;
 
-    //     if (!active && !timerId) {
-    //       timers.current[field] = setTimeout(() => {
-    //         dispatch({
-    //           type: 'changeField',
-    //           field,
-    //           value: {
-    //             ...state,
-    //             timerId: null,
-    //             active: true,
-    //             cooldown:
-    //               skillsConfig[field].cooldown + skillsConfig[field].duration,
-    //           },
-    //         });
-    //       }, cooldown * 1000);
-    //       dispatch({
-    //         type: 'changeField',
-    //         field,
-    //         value: {
-    //           ...state,
-    //           timerId: timers.current[field],
-    //         },
-    //       });
-    //     } else if (active) {
-    //       setTimeout(() => {
-    //         dispatch({
-    //           type: 'changeField',
-    //           field,
-    //           value: {
-    //             ...state,
-    //             active: false,
-    //             cooldown: skillsConfig[field].cooldown,
-    //           },
-    //         });
-    //       }, skillsConfig[field].duration * 1000);
-    //     }
-    //   });
-    // }, [skillsState]);
+        if (!active && !timerId) {
+          timers.current[field] = setTimeout(() => {
+            dispatch({
+              type: 'changeField',
+              field,
+              value: {
+                ...state,
+                timerId: null,
+                active: true,
+                cooldown:
+                  skillsConfig[field].cooldown + skillsConfig[field].duration,
+              },
+            });
+          }, cooldown * 1000);
+          dispatch({
+            type: 'changeField',
+            field,
+            value: {
+              ...state,
+              timerId: timers.current[field],
+            },
+          });
+        } else if (active) {
+          setTimeout(() => {
+            dispatch({
+              type: 'changeField',
+              field,
+              value: {
+                ...state,
+                active: false,
+                cooldown: skillsConfig[field].cooldown,
+              },
+            });
+          }, skillsConfig[field].duration * 1000);
+        }
+      });
+    }, [skillsState]);
 
     useEffect(() => {
       return () => {
@@ -147,7 +149,6 @@ const Foe = React.memo(
     }, [foeIndex, animationControls, animationHpControls]);
 
     const [hp, setHp] = useState(maxHp);
-    const foeImage = require(`../img/${picture}`);
 
     function handleSetHp() {
       const updatedHp = hp - heroAttackDamage;
@@ -156,6 +157,17 @@ const Foe = React.memo(
         triggerNextFoe();
       } else {
         setHp(updatedHp);
+      }
+    }
+
+    function skillSet() {
+      if (skillsState.block?.active) {
+        return;
+      } else if (skillsState.substitution?.active) {
+        setComputedFoeImage(require('../img/subst.png'));
+      } else {
+        handleHitFoe();
+        handleSetHp();
       }
     }
 
@@ -169,13 +181,8 @@ const Foe = React.memo(
           }}
           animate={animationControls}
           initial={{ opacity: 0, scale: 0.1 }}
-          foeImage={foeImage}
-          onClick={() => {
-            if (!skillsState.block?.active) {
-              handleHitFoe();
-              handleSetHp();
-            }
-          }}
+          foeImage={computedFoeImage}
+          onClick={skillSet}
         />
         <StyledHpBar animate={animationHpControls} maxHp={maxHp} hp={hp} />
       </StyledFoeWrapper>

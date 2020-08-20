@@ -3,7 +3,7 @@ import foesConfig from '../configs/foes';
 import Foe from './Foe';
 
 export default function Foes({
-  handleFoeHit,
+  handleHitFoe,
   heroAttackDamage,
   foeRef,
   triggerNextFoeCallback,
@@ -26,7 +26,7 @@ export default function Foes({
       foeIndex={foeIndex}
       code={order[foeIndex]}
       triggerNextFoe={handleTriggerNextFoe}
-      handleHitFoe={handleFoeHit}
+      handleHitFoe={handleHitFoe}
       heroAttackDamage={heroAttackDamage}
       foeRef={foeRef}
     />
