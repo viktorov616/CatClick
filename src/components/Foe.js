@@ -21,6 +21,11 @@ const StyledFoe = styled(motion.div)`
   &:hover {
     cursor: url(${Cursor}), auto;
   }
+  ${(props) =>
+    props.scale &&
+    `
+    transform: scale(0.5); 
+  `}
 `;
 
 const StyledHpBar = styled(motion.div)`
@@ -46,7 +51,6 @@ const Foe = React.memo(
     hp: maxHp,
     picture,
     triggerNextFoe,
-    code,
     handleHitFoe,
     foeIndex,
     heroAttackDamage,
@@ -163,6 +167,9 @@ const Foe = React.memo(
         return;
       } else if (skillsState.substitution?.active) {
         setComputedFoeImage(require('../img/subst.png'));
+        setTimeout(() => {
+          setComputedFoeImage(foeImage);
+        }, skillsConfig['substitution'].duration * 1000);
       } else {
         handleHitFoe();
         handleSetHp();
@@ -172,6 +179,7 @@ const Foe = React.memo(
     return (
       <StyledFoeWrapper>
         <StyledFoe
+          scale={skillsState.substitution?.active}
           ref={foeRef}
           style={{
             transformOrigin: 'top left',
@@ -182,7 +190,9 @@ const Foe = React.memo(
           foeImage={computedFoeImage}
           onClick={skillSet}
         />
-        <StyledHpBar animate={animationHpControls} maxHp={maxHp} hp={hp} />
+        {!skillsState.substitution?.active && (
+          <StyledHpBar animate={animationHpControls} maxHp={maxHp} hp={hp} />
+        )}
       </StyledFoeWrapper>
     );
   }

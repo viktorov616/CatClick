@@ -16,6 +16,7 @@ const order = [
   {
     location: 'sand.jpg',
     foes: [
+      'boss2',
       'ninja',
       // 'ninja2',
       // 'ninja3',

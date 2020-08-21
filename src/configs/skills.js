@@ -6,6 +6,7 @@ const skills = {
   },
   substitution: {
     initialDelay: 5,
+    duration: 10,
     cooldown: 60,
   },
 };

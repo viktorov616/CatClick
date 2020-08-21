@@ -17,7 +17,7 @@ const foes = {
     skills: ['block'],
   },
   boss2: {
-    hp: '300',
+    hp: '30000',
     picture: 'kaguya.png',
     skills: ['substitution'],
   },
