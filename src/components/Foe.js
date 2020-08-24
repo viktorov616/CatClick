@@ -11,7 +11,7 @@ const StyledFoeWrapper = styled.div`
   bottom: 20px;
 `;
 
-const StyledFoe = styled(motion.div)`
+const StyledFoe = styled.div`
   background-image: url(${(props) => props.foeImage});
   background-size: contain;
   background-repeat: no-repeat;
@@ -22,10 +22,10 @@ const StyledFoe = styled(motion.div)`
     cursor: url(${Cursor}), auto;
   }
   ${(props) =>
-    props.scale &&
+    props.scaleFlag &&
     `
-    transform: scale(0.5); 
-  `}
+  transform: scale(0.5); 
+`}
 `;
 
 const StyledHpBar = styled(motion.div)`
@@ -178,18 +178,21 @@ const Foe = React.memo(
 
     return (
       <StyledFoeWrapper>
-        <StyledFoe
-          scale={skillsState.substitution?.active}
-          ref={foeRef}
+        <motion.div
           style={{
             transformOrigin: 'top left',
             display: 'block',
           }}
           animate={animationControls}
           initial={{ opacity: 0, scale: 0.1 }}
-          foeImage={computedFoeImage}
-          onClick={skillSet}
-        />
+        >
+          <StyledFoe
+            scaleFlag={skillsState.substitution?.active}
+            ref={foeRef}
+            foeImage={computedFoeImage}
+            onClick={skillSet}
+          />
+        </motion.div>
         {!skillsState.substitution?.active && (
           <StyledHpBar animate={animationHpControls} maxHp={maxHp} hp={hp} />
         )}
