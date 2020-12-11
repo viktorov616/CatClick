@@ -7,8 +7,9 @@ import ShopClosed from '../img/scroll_closed.png';
 import shopConfig, { shopOrder } from '../configs/shop';
 import produce from 'immer';
 import { useSaveData } from '../utils/hooks';
+import { motion } from 'framer-motion';
 
-const StyledShop = styled.div`
+const StyledShop = styled(motion.div)`
   width: 209px;
   height: ${(props) => (props.status ? 780 : 61)}px;
   display: flex;
@@ -87,7 +88,11 @@ export default function Shop({
   }
 
   return (
-    <StyledShop status={shopStatus} img={shopStatus ? ShopOpened : ShopClosed}>
+    <StyledShop
+      layout
+      status={shopStatus}
+      img={shopStatus ? ShopOpened : ShopClosed}
+    >
       <StyledShopToggler onClick={() => setShopStatus(!shopStatus)} />
       {shopStatus &&
         shopOrder.map((item) => {
